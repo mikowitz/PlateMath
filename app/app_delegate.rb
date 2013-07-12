@@ -1,5 +1,4 @@
-class AppDelegate
-  def application(application, didFinishLaunchingWithOptions:launchOptions)
-    true
+class AppDelegate < PM::Delegate
+  def on_load(app, options)
   end
 end

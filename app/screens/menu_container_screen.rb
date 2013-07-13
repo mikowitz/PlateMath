@@ -2,7 +2,7 @@ class MenuContainerScreen < PM::Screen
   OFFSET = 270
   stylesheet :menu_container
 
-  attr_accessor :main_view, :right_menu, :left_menu
+  attr_accessor :main_screen, :right_menu, :left_menu
 
   def on_create(args={})
     @main_screen = args[:main_screen]
@@ -74,6 +74,6 @@ class MenuContainerScreen < PM::Screen
   end
 
   def menu_on(menu_side)
-    self.instance_variable_get("@#{menu_side}_menu")
+    send("#{menu_side}_menu")
   end
 end

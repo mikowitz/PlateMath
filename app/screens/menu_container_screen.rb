@@ -1,6 +1,5 @@
 class MenuContainerScreen < PM::Screen
   include HasContainer
-  OFFSET = 270
   stylesheet :menu_container
 
   attr_accessor :main_screen, :right_menu, :left_menu
@@ -24,21 +23,6 @@ class MenuContainerScreen < PM::Screen
       set_right_menu_to_closed
       right_menu.container = self
       self.view.insertSubview(@right_menu.view, atIndex: 0)
-    end
-
-    @right_swipe = @main_screen.view.on_swipe(:right) do |swipe|
-      if @main_screen.view.origin.x == 0 && @left_menu.present?
-        show_menu(:left)
-      elsif @main_screen.view.origin.x == -OFFSET
-        hide_menu(:right)
-      end
-    end
-    @left_swipe = @main_screen.view.on_swipe(:left) do |swipe|
-      if @main_screen.view.origin.x == 0 && @right_menu.present?
-        show_menu(:right)
-      elsif @main_screen.view.origin.x == OFFSET
-        hide_menu(:left)
-      end
     end
   end
 

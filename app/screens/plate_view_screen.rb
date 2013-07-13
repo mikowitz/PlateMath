@@ -1,14 +1,22 @@
 class PlateViewScreen < PM::Screen
   include HasContainer
-  stylesheet :plate_math
+  stylesheet :plate_view
   layout :plate_view do
-    @label = subview(UILabel, :label)
+    @buttons = subview(UIView, :buttons) do
+      @left_button = subview(UIButton, :left_button)
+      @right_button = subview(UIButton, :right_button)
+      @weight_text_field = subview(UITextField, :weight_text_field)
+    end
+    @bar_view = subview(UIView, :bar_view) do
+      subview(UIView, :thin_bar)
+      subview(UIView, :left_bar)
+      subview(UIView, :right_bar)
+      subview(UIView, :left_stopper)
+      subview(UIView, :right_stopper)
+    end
   end
 
   def will_appear
-    self.view.backgroundColor = :blue.uicolor
-    @label.text = "PlateViewScreen"
-    @label.sizeToFit
     add_gestures
   end
 

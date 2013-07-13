@@ -13,6 +13,9 @@ class MenuContainerScreen < PM::Screen
   def will_appear
     display_main_screen
     main_screen.container = self
+    main_screen.view.layer.masksToBounds = false
+    main_screen.view.layer.shadowColor = :black.uicolor.CGColor
+    main_screen.view.layer.shadowOpacity = 0.5
     self.view.insertSubview(@main_screen.view, atIndex: 0)
     if left_menu.present?
       set_left_menu_to_closed
@@ -55,8 +58,9 @@ class MenuContainerScreen < PM::Screen
 
   def show_menu(menu_side)
     return unless menu_on(menu_side).present?
-    main_direction = menu_side == :left ? :right : :left
-    @main_screen.view.slide main_direction, OFFSET
+    slide_direction = menu_side == :left ? :right : :left
+    @main_screen.view.layer.shadowOffset = CGSizeMake((menu_side == :left ? -5 : 5 ), 0)
+    @main_screen.view.slide slide_direction, OFFSET
     menu_on(menu_side).view.frame = self.view.bounds
   end
 

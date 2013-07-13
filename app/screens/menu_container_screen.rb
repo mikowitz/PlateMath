@@ -1,4 +1,5 @@
 class MenuContainerScreen < PM::Screen
+  include HasContainer
   OFFSET = 270
   stylesheet :menu_container
 
@@ -11,9 +12,20 @@ class MenuContainerScreen < PM::Screen
   end
 
   def will_appear
-    display_main_view
-    set_left_menu_to_closed
-    set_right_menu_to_closed
+    display_main_screen
+    main_screen.container = self
+    self.view.insertSubview(@main_screen.view, atIndex: 0)
+    if left_menu.present?
+      set_left_menu_to_closed
+      left_menu.container = self
+      self.view.insertSubview(@left_menu.view, atIndex: 0)
+    end
+    if right_menu.present?
+      set_right_menu_to_closed
+      right_menu.container = self
+      self.view.insertSubview(@right_menu.view, atIndex: 0)
+    end
+
     @right_swipe = @main_screen.view.on_swipe(:right) do |swipe|
       if @main_screen.view.origin.x == 0 && @left_menu.present?
         show_menu(:left)
@@ -35,9 +47,6 @@ class MenuContainerScreen < PM::Screen
     frame = self.view.bounds
     frame.size.width = 0
     @left_menu.view.frame = frame
-    unless self.view.subviews.include?(@left_menu.view)
-      self.view.insertSubview(@left_menu.view, atIndex: 0)
-    end
   end
 
   def set_right_menu_to_closed
@@ -46,21 +55,15 @@ class MenuContainerScreen < PM::Screen
     frame.size.width = 0
     frame.origin.x = self.view.bounds.width
     @right_menu.view.frame = frame
-    unless self.view.subviews.include?(@right_menu.view)
-      self.view.insertSubview(@right_menu.view, atIndex: 0)
-    end
   end
 
-  def display_main_view
+  def display_main_screen
     @main_screen.view.frame = self.view.bounds
-    unless self.view.subviews.include?(@main_screen.view)
-      self.view.insertSubview(@main_screen.view, atIndex: 0)
-    end
   end
 
   def hide_menu(menu_side)
     UIView.animation_chain(duration: 0.3) {
-      display_main_view
+      display_main_screen
     }.and_then(duration: 0.1) {
       send("set_#{menu_side}_menu_to_closed")
     }.start

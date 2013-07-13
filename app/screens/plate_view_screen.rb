@@ -1,4 +1,5 @@
 class PlateViewScreen < PM::Screen
+  include HasContainer
   stylesheet :plate_math
   layout :plate_view do
     @label = subview(UILabel, :label)

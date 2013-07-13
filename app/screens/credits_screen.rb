@@ -1,4 +1,5 @@
 class CreditsScreen < PM::Screen
+  include HasContainer
   stylesheet :plate_math
   layout :settings do
     @label = subview(UILabel, :label)

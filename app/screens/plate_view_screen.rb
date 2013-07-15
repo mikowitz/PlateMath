@@ -22,18 +22,19 @@ class PlateViewScreen < PM::Screen
 
   def add_gestures
     self.view.on_swipe(:right) do |swipe|
-      if self.view.origin.x == 0 && container.left_menu.present?
-        container.show_menu(:left)
-      elsif self.view.origin.x == -OFFSET
-        container.hide_menu(:right)
-      end
+      swipe(:right, -OFFSET)
     end
     self.view.on_swipe(:left) do |swipe|
-      if self.view.origin.x == 0 && container.right_menu.present?
-        container.show_menu(:right)
-      elsif self.view.origin.x == OFFSET
-        container.hide_menu(:left)
-      end
+      swipe(:left, OFFSET)
+    end
+  end
+
+  def swipe(direction, expected_offset)
+    other_direction = direction == :left ? :right : :left
+    if self.view.origin.x == 0
+      container.show_menu(other_direction)
+    elsif self.view.origin.x == expected_offset
+      container.hide_menu(direction)
     end
   end
 end

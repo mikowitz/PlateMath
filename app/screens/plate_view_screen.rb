@@ -20,7 +20,7 @@ class PlateViewScreen < PM::Screen
     add_gestures
     add_button_controls
     add_notifications
-    @weight_text_field.text = '45.0'
+    @weight_text_field.text = App::Persistence['weight'].to_s
     @weight_text_field.delegate = self
     @incrementer = Incrementer.new
 
@@ -104,6 +104,7 @@ class PlateViewScreen < PM::Screen
 
   def weight_did_finish_editing
     @weight_text_field.resignFirstResponder
+    App::Persistence['weight'] = @weight_text_field.text.to_f
   end
 
   def shift_frame(notification, direction)

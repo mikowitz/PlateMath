@@ -1,5 +1,6 @@
 class AppDelegate < PM::Delegate
   def on_load(app, options)
+    App::Persistence['weight'] ||= 45.0
     open MenuContainerScreen.new(
       main_screen: MenuContainerScreen.new(
         main_screen: PlateViewScreen.new,

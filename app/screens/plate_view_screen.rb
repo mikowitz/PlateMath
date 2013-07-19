@@ -22,6 +22,7 @@ class PlateViewScreen < PM::Screen
     add_notifications
     @weight_text_field.text = '45.0'
     @weight_text_field.delegate = self
+    @incrementer = Incrementer.new
 
     self.view.on_tap { weight_did_finish_editing }
   end
@@ -35,18 +36,41 @@ class PlateViewScreen < PM::Screen
     end
   end
 
+  def increase_weight
+    add_gradient :right
+    change_weight :+
+    @timer = 300.milliseconds.every { change_weight :+ }
+  end
+
+  def decrease_weight
+    add_gradient :left
+    change_weight :-
+    @timer = 300.milliseconds.every { change_weight :- }
+  end
+  
+  def change_weight(operator)
+    old_weight = @weight_text_field.text.to_f
+    new_weight = old_weight.send(operator, @incrementer.increment)
+    @weight_text_field.text = new_weight.to_s
+    @incrementer.tick!(new_weight)
+  end
+
   def add_button_controls
-    {left: '-', right: '+'}.each do |direction, button_title|
-      button = instance_variable_get("@#{direction}_button")
-      button.setTitle(button_title, forState: :normal.uicontrolstate)
-      button.on(:touch_start) do
-        add_gradient(direction)
-      end
-      button.on(:touch_stop) do
-        remove_gradient
-        weight_did_finish_editing
-      end
-    end
+    setup_button(@right_button, '+') { increase_weight }
+    setup_button(@left_button, '-') { decrease_weight }
+  end
+
+  def setup_button(button, title, &on_touch)
+    button.setTitle(title, forState: :normal.uicontrolstate)
+    button.on(:touch_start, &on_touch)
+    button.on(:touch_stop) { weight_did_stop_changing }
+  end
+
+  def weight_did_stop_changing
+    remove_gradient
+    @timer.invalidate
+    @incrementer.reset!
+    weight_did_finish_editing
   end
 
   def add_notifications

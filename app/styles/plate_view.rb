@@ -1,10 +1,51 @@
 Teacup::Stylesheet.new :plate_view do
   @clear = :clear.uicolor
-  @backgroundGray = 0xf0f0f0.uicolor
+  @backgroundGray = 0xe0e0e0.uicolor
   @barGray = :gray.uicolor
 
   style :plate_view,
     backgroundColor: @backgroundGray
+
+  ## BUTTONS
+
+  style :buttons,
+    backgroundColor: @clear,
+    constraints: [
+      :full_width,
+      :left,
+      :bottom,
+      constrain_height(75)
+    ]
+
+  style :left_button,
+    backgroundColor: @clear,
+    font: UIFont.systemFontOfSize(40),
+    constraints: [
+      :left,
+      :top,
+      :full_height,
+      constrain_width(70)
+    ]
+
+  style :right_button,
+    backgroundColor: @clear,
+    font: UIFont.systemFontOfSize(40),
+    constraints: [
+      :right,
+      :top,
+      :full_height,
+      constrain_width(70)
+    ]
+
+  style :weight_text_field,
+    keyboardType: UIKeyboardTypeDecimalPad,
+    textAlignment: :center.uitextalignment,
+    constraints: [
+      :centered,
+      constrain_width(100)
+    ]
+
+  ## BAR VIEW ##
 
   style :bar_view,
     backgroundColor: @clear,
@@ -59,4 +100,5 @@ Teacup::Stylesheet.new :plate_view do
       constrain_width(16),
       constrain(:right).equals(:superview, :right).minus(110)
     ]
+
 end

@@ -18,6 +18,12 @@ class PlateViewScreen < PM::Screen
 
   def will_appear
     add_gestures
+    add_button_controls
+    add_notifications
+    @weight_text_field.text = '45.0'
+    @weight_text_field.delegate = self
+
+    self.view.on_tap { weight_did_finish_editing }
   end
 
   def add_gestures
@@ -29,6 +35,40 @@ class PlateViewScreen < PM::Screen
     end
   end
 
+  def add_button_controls
+    {left: '-', right: '+'}.each do |direction, button_title|
+      button = instance_variable_get("@#{direction}_button")
+      button.setTitle(button_title, forState: :normal.uicontrolstate)
+      button.on(:touch_start) do
+        add_gradient(direction)
+      end
+      button.on(:touch_stop) do
+        remove_gradient
+        weight_did_finish_editing
+      end
+    end
+  end
+
+  def add_notifications
+    @keyboard_show = App.notification_center.observe UIKeyboardWillShowNotification do |notification|
+      shift_frame(notification, :up)
+    end
+
+    @keyboard_hide = App.notification_center.observe UIKeyboardWillHideNotification do |notification|
+      shift_frame(notification, :down)
+    end
+  end
+
+  def add_gradient(direction)
+    layer = HorizontalGradientLayer.layer(direction)
+    layer.frame = @buttons.bounds
+    @buttons.layer.insertSublayer(layer, atIndex: 0)
+  end
+
+  def remove_gradient
+    @buttons.layer.sublayers[0].removeFromSuperlayer
+  end
+
   def swipe(direction, expected_offset)
     other_direction = direction == :left ? :right : :left
     if self.view.origin.x == 0
@@ -36,5 +76,20 @@ class PlateViewScreen < PM::Screen
     elsif self.view.origin.x == expected_offset
       container.hide_menu(direction)
     end
+  end
+
+  def weight_did_finish_editing
+    @weight_text_field.resignFirstResponder
+  end
+
+  def shift_frame(notification, direction)
+    UIView.animation_chain(duration: notification.userInfo['UIKeyboardAnimationDurationUserInfoKey']) {
+      @buttons.slide(direction, notification.userInfo['UIKeyboardFrameBeginUserInfoKey'].CGRectValue.size.height)
+    }.start
+  end
+
+  # text field delegate methods
+  def textFieldShouldReturn(text_field)
+    weight_did_finish_editing
   end
 end

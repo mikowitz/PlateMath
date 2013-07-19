@@ -4,6 +4,10 @@ class MenuContainerScreen < PM::Screen
 
   attr_accessor :main_screen, :right_menu, :left_menu
 
+  def shouldAutorotate
+    false
+  end
+
   def on_create(args={})
     @main_screen = args[:main_screen]
     @right_menu = args[:right_menu]

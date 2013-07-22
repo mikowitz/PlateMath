@@ -65,7 +65,11 @@ class MenuContainerScreen < PM::Screen
     slide_direction = menu_side == :left ? :right : :left
     @main_screen.view.layer.shadowOffset = CGSizeMake((menu_side == :left ? -5 : 5 ), 0)
     @main_screen.view.slide slide_direction, OFFSET
-    menu_on(menu_side).view.frame = self.view.bounds
+    frame = self.view.bounds
+    if menu_side == :left && menu_on(menu_side).is_a?(AvailablePlatesFormScreen)
+      frame.size.width = frame.size.width - 50
+    end
+    menu_on(menu_side).view.frame = frame
   end
 
   def menu_on(menu_side)

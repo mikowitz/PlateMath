@@ -20,7 +20,7 @@ class PlateViewScreen < PM::Screen
     add_gestures
     add_button_controls
     add_notifications
-    @weight_text_field.text = App::Persistence['weight'].to_s
+    @weight_text_field.text = App::Persistence['recent_weights'].first.to_s
     @weight_text_field.delegate = self
     @incrementer = Incrementer.new
 
@@ -104,7 +104,7 @@ class PlateViewScreen < PM::Screen
 
   def weight_did_finish_editing
     @weight_text_field.resignFirstResponder
-    App::Persistence['weight'] = @weight_text_field.text.to_f
+    persist_weight
   end
 
   def shift_frame(notification, direction)
@@ -116,5 +116,10 @@ class PlateViewScreen < PM::Screen
   # text field delegate methods
   def textFieldShouldReturn(text_field)
     weight_did_finish_editing
+  end
+
+  def persist_weight
+    App::Persistence['recent_weights'] = (App::Persistence['recent_weights'].dup.unshift(@weight_text_field.text.to_f)).uniq[0..25]
+    self.container.left_menu.update_table_data
   end
 end

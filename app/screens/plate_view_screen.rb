@@ -36,13 +36,27 @@ class PlateViewScreen < PM::Screen
     observe(@weight_text_field, :text) do |old_val, new_val|
       draw_plates(new_val.to_f)
     end
-
     draw_plates(@weight_text_field.text.to_f)
   end
 
   def draw_plates(weight)
     plates = @calculator.plates(weight)
     @plate_label.text = plates.join(' - ')
+    @bar_view.subviews.each do |subview|
+      if subview.is_a?(PlateView)
+        subview.removeFromSuperview
+      end
+    end
+    right_x = 211
+    left_x = 110
+    plates.each do |plate_weight|
+      plate = PlateView.alloc.initWithWeight(plate_weight, atX: right_x)
+      @bar_view.addSubview plate
+      right_x += (plate.frame.width + 1)
+      left_x -= (plate.frame.width + 1)
+      plate = PlateView.alloc.initWithWeight(plate_weight, atX: left_x)
+      @bar_view.addSubview plate
+    end
   end
 
   def add_gestures
@@ -69,6 +83,7 @@ class PlateViewScreen < PM::Screen
   def change_weight(operator)
     old_weight = @weight_text_field.text.to_f
     new_weight = old_weight.send(operator, @incrementer.increment)
+    new_weight = [new_weight, App::Persistence['bar_weight']].max
     @weight_text_field.text = new_weight.to_s
     @incrementer.tick!(new_weight)
   end

@@ -34,6 +34,8 @@ class PlateViewScreen < PM::Screen
     observe(@weight_text_field, :text) do |old_val, new_val|
       draw_plates(new_val.to_f)
     end
+
+    draw_plates(@weight_text_field.text.to_f)
   end
 
   def draw_plates(weight)

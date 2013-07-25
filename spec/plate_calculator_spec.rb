@@ -14,6 +14,9 @@ describe PlateCalculator do
   it 'should calculate corectly with limited plates' do
     @calculator.set_plate_count(10, 1)
     @calculator.plates(85).should == [10, 5, 5]
+
+    @calculator.set_plate_count(35, 0)
+    @calculator.plates(115).should == [25, 10]
   end
 
   it 'should calculate correctly with a different bar weight' do

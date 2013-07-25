@@ -6,6 +6,16 @@ Teacup::Stylesheet.new :plate_view do
   style :plate_view,
     backgroundColor: @backgroundGray
 
+  ## PLATE LABEL
+
+  style :plate_label,
+    textAlignment: :center.uitextalignment,
+    constraints: [
+      :full_width,
+      :left,
+      constrain_top(30)
+    ]
+
   ## BUTTONS
 
   style :buttons,

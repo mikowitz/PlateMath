@@ -1,5 +1,7 @@
 class PlateViewScreen < PM::Screen
   include HasContainer
+  include BW::KVO
+
   stylesheet :plate_view
   layout :plate_view do
     @buttons = subview(UIView, :buttons) do
@@ -7,6 +9,7 @@ class PlateViewScreen < PM::Screen
       @right_button = subview(UIButton, :right_button)
       @weight_text_field = subview(UITextField, :weight_text_field)
     end
+    @plate_label = subview(UILabel, :plate_label)
     @bar_view = subview(UIView, :bar_view) do
       subview(UIView, :thin_bar)
       subview(UIView, :left_bar)
@@ -24,7 +27,18 @@ class PlateViewScreen < PM::Screen
     @weight_text_field.delegate = self
     @incrementer = Incrementer.new
 
+    @calculator = PlateCalculator.new
+
     self.view.on_tap { weight_did_finish_editing }
+
+    observe(@weight_text_field, :text) do |old_val, new_val|
+      draw_plates(new_val.to_f)
+    end
+  end
+
+  def draw_plates(weight)
+    plates = @calculator.plates(weight)
+    @plate_label.text = plates.join(' - ')
   end
 
   def add_gestures

@@ -9,7 +9,7 @@ class PlateCalculator
   end
 
   def plates(weight)
-    weight = (weight - @bar_weight) / 2.0
+    weight = (weight.to_f - @bar_weight) / 2.0
     results = []
 
     PLATE_WEIGHTS.each do |plate_weight|

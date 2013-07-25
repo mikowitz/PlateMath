@@ -24,4 +24,12 @@ class SettingsScreen < PM::GroupedTableScreen
       arguments: { weight: weight }
     }
   end
+
+  def set_weight(args={})
+    if args[:weight]
+      container.main_screen.weight_text_field.text = args[:weight].to_s
+      container.hide_menu(:left)
+      container.main_screen.persist_weight
+    end
+  end
 end

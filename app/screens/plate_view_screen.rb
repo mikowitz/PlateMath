@@ -2,6 +2,8 @@ class PlateViewScreen < PM::Screen
   include HasContainer
   include BW::KVO
 
+  attr_accessor :weight_text_field
+
   stylesheet :plate_view
   layout :plate_view do
     @buttons = subview(UIView, :buttons) do

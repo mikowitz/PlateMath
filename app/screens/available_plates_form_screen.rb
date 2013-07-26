@@ -28,7 +28,7 @@ class AvailablePlatesFormScreen < PM::FormotionScreen
   def form_element_for_weight(weight)
     { 
       title: weight.to_s,
-      key: :"weight_#{weight}",
+      key: weight.to_s,
       value: App::Persistence['available_plates'][weight.to_s],
       placeholder: '',
       type: :number
@@ -38,15 +38,13 @@ class AvailablePlatesFormScreen < PM::FormotionScreen
   def will_appear
     self.form.on_submit do |form|
       form.active_row && form.active_row.text_field.resignFirstResponder
-      data = Hash[form.render.map do |key, value|
-        [key.to_s.sub(/weight_/, ''), value]
-      end]
+      data = form.render
       App::Persistence['available_plates'] = data
+      self.container.main_screen.main_screen.calculator.set_plate_counts(App::Persistence['available_plates'])
+
+      container.main_screen.main_screen.draw_plates(container.main_screen.main_screen.weight_text_field.text.to_f)
+
       self.container.hide_menu(:left)
     end
-  end
-
-  def textFieldShouldReturn(text_field)
-    text_field.resignFirstResponder
   end
 end

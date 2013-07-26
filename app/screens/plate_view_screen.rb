@@ -2,7 +2,7 @@ class PlateViewScreen < PM::Screen
   include HasContainer
   include BW::KVO
 
-  attr_accessor :weight_text_field
+  attr_accessor :weight_text_field, :calculator
 
   stylesheet :plate_view
   layout :plate_view do
@@ -29,7 +29,7 @@ class PlateViewScreen < PM::Screen
     @weight_text_field.delegate = self
     @incrementer = Incrementer.new
 
-    @calculator = PlateCalculator.new
+    @calculator = PlateCalculator.new(App::Persistence['bar_weight'], App::Persistence['available_plates'])
 
     self.view.on_tap { weight_did_finish_editing }
 

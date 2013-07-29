@@ -8,8 +8,8 @@ class AvailablePlatesFormScreen < PM::FormotionScreen
         rows: [
           {
             type: :static,
-            title: 'Enter number of plate *pairs*',
-            subtitle: 'blank values will be counted as unlimited'
+            title: 'Number of plate *pairs*',
+            subtitle: 'blank is counted as unlimited'
           }
         ] + weight_form_rows
       }, {

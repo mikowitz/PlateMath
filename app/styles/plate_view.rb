@@ -9,6 +9,7 @@ Teacup::Stylesheet.new :plate_view do
   ## PLATE LABEL
 
   style :plate_label,
+    backgroundColor: @clear,
     textAlignment: :center.uitextalignment,
     constraints: [
       :full_width,

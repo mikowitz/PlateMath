@@ -61,7 +61,7 @@ class MenuContainerScreen < PM::Screen
   end
 
   def show_menu(menu_side)
-    return unless menu_on(menu_side).present?
+    return unless menu_closed_on?(menu_side)
     slide_direction = menu_side == :left ? :right : :left
     @main_screen.view.layer.shadowOffset = CGSizeMake((menu_side == :left ? -5 : 5 ), 0)
     @main_screen.view.slide slide_direction, OFFSET
@@ -74,5 +74,9 @@ class MenuContainerScreen < PM::Screen
 
   def menu_on(menu_side)
     send("#{menu_side}_menu")
+  end
+
+  def menu_closed_on?(menu_side)
+    menu_on(menu_side).present? && menu_on(menu_side).view.frame.width == 0
   end
 end

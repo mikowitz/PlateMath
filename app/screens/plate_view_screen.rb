@@ -2,7 +2,7 @@ class PlateViewScreen < PM::Screen
   include HasContainer
   include BW::KVO
 
-  attr_accessor :weight_text_field, :calculator
+  attr_accessor :weight_text_field, :calculator, :incrementer
 
   stylesheet :plate_view
   layout :plate_view do
@@ -27,7 +27,7 @@ class PlateViewScreen < PM::Screen
     add_notifications
     @weight_text_field.text = App::Persistence['recent_weights'].first.to_s
     @weight_text_field.delegate = self
-    @incrementer = Incrementer.new
+    @incrementer = Incrementer.with_minimum_increment(App::Persistence['available_plates'])
 
     @calculator = PlateCalculator.new(App::Persistence['bar_weight'], App::Persistence['available_plates'])
 
@@ -137,6 +137,15 @@ class PlateViewScreen < PM::Screen
 
   def weight_did_finish_editing
     @weight_text_field.resignFirstResponder
+    persist_weight
+  end
+
+  def change_bar_weight
+    @calculator = PlateCalculator.new(App::Persistence['bar_weight'], App::Persistence['available_plates'])
+    next_possible_weight = App::Persistence['recent_weights'].find{|weight| weight >= App::Persistence['bar_weight']}
+    @weight_text_field.text = next_possible_weight.to_s
+    draw_plates(next_possible_weight)
+    container.hide_menu(:left)
     persist_weight
   end
 

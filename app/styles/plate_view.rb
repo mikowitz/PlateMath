@@ -111,5 +111,4 @@ Teacup::Stylesheet.new :plate_view do
       constrain_width(16),
       constrain(:right).equals(:superview, :right).minus(110)
     ]
-
 end

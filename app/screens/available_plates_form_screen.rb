@@ -41,6 +41,7 @@ class AvailablePlatesFormScreen < PM::FormotionScreen
       data = form.render
       App::Persistence['available_plates'] = data
       self.container.main_screen.main_screen.calculator.set_plate_counts(App::Persistence['available_plates'])
+      self.container.main_screen.main_screen.incrementer = Incrementer.with_minimum_increment(App::Persistence['available_plates'])
 
       container.main_screen.main_screen.draw_plates(container.main_screen.main_screen.weight_text_field.text.to_f)
 

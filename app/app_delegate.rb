@@ -1,8 +1,8 @@
 class AppDelegate < PM::Delegate
   def on_load(app, options)
-    App::Persistence['available_plates'] ||= {}
+    App::Persistence['available_plates'] ||= { "1.25" => "" }
     App::Persistence['recent_weights'] ||= [45.0]
-    App::Persistence['bar_weight'] ||= 45.0
+    App::Persistence['bar_weight'] ||= 45
     open MenuContainerScreen.new(
       main_screen: MenuContainerScreen.new(
         main_screen: PlateViewScreen.new,

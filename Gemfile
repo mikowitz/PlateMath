@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rake'
-gem 'teacup'
+gem 'rmq'
 gem 'sugarcube'
 gem 'ProMotion'
 gem 'formotion'
